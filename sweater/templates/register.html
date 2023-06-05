@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ super() }}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <div class="container d-flex align-items-center justify-content-center">
+          <li>{{ message }}</li>
+      </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="post" class="container d-flex align-items-center justify-content-center">
+    <table>
+        <tr>
+            <td>Имя пользователя:</td>
+            <td><input class="form-control create-input" type="text" name="username"></td>
+        </tr>
+        <tr>
+            <td>Пароль:</td>
+            <td><input class="form-control create-input" type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>Повторите пароль</td>
+            <td><input class="form-control create-input" type="password" name="sPassword"></td>
+        </tr>
+        <tr>
+            <td><a href="login">Авторизоваться</a></td>
+            <td><input class="form-control create-input" type="submit" value="Зарегистрироваться"></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

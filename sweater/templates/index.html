@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ super() }}
+{%- block container -%}
+<div class="container">
+    <div class="row">
+            <div class="col-md-auto sidebar">
+                <form action="/create_list" method="post">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item sidebar-list-item">Арендная плата за сутки, ₽</li>
+                        <div class="input-group">
+                            <input type="text" name="min_p" placeholder="от" class="form-control">
+                            <input type="text" name="max_p" placeholder="до" class="form-control">
+                        </div>
+                        <li class="list-group-item sidebar-list-item">Кол-во комнат</li>
+                        {% for row in f_num %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="roomCheck" id="inlineRadio1" value="{{row}}">
+                            <label class="form-check-label" for="inlineRadio1">{{row}} комнат(ы)</label>
+                        </div>
+                        {% endfor %}
+                        <li class="list-group-item sidebar-list-item">Площадь</li>
+                        <div class="input-group">
+                            <input type="text" name="min_s" placeholder="от" class="form-control">
+                            <input type="text" name="max_s" placeholder="до" class="form-control">
+                        </div>
+                        <li class="list-group-item sidebar-list-item">Город</li>
+                        {% for k in f_city %}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="cityCheck" id="inlineRadio4" value="{{k}}">
+                            <label class="form-check-label" for="inlineRadio1">{{k}}</label>
+                        </div>
+                        {% endfor %}
+                        <li class="list-group-item sidebar-list-item">Дата публикации</li>
+                        <input type="date" name="select_date" min="2023-05-23" max="2077-12-31">
+                        <input type="submit" value="Применить фильтры" class="filter-button">
+                        <p>{{message}}</p>
+                    </ul>
+                </form>
+            </div>
+        <div class="col">
+            <form action="/sort" method="POST">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Сортировать
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><input type="submit" class="dropdown-item drpd-style" name="sort_msg" value="По дате публикации"></li>
+                        <li><input type="submit" class="dropdown-item drpd-style" name="sort_msg" value="По цене"></li>
+                        <li><input type="submit" class="dropdown-item drpd-style" name="sort_msg" value="По кол-ву комнат"></li>
+                    </ul>
+                </div>
+            </form>
+            <form action="/delete" method="POST">
+                <ul class="list-group offers">
+                    {% for row in data %}
+                    <li class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" value="{{row.id}}" id="firstCheckbox" name="mycheckbox">
+                            <label class="form-check-label title">{{row.room_num}}-к. квартира, {{row.area}} м², {{row.floor}} эт.</label>
+                            <p class="mb-1">от {{row.price}}р за сутки</p>
+                            <small>{{row.city}} {{row.address}}</small>
+                            <small class="text-muted">Дата публикации: {{row.publ_date}}</small><br>
+                            {% if row.booking == True %}
+                                <small class="text-muted">(Забронировано)</small>
+                                {% for r in bookingData %}
+                                    {% if r.offer_id == row.id %}
+                                        <small class="text-muted">от: {{r.date_min}}</small>
+                                        <small class="text-muted">до: {{r.date_max}}</small>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <small class="text-muted">(Свободно)</small>
+                            {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <input class="btn btn-primary delete-button" type="submit" value="Удалить">
+                <a class="btn btn-primary delete-button" href="/create" role="button">Добавить</a>
+                <a class="btn btn-primary delete-button" href="/booking" role="button">Забронировать</a>
+            </form>
+            <form action="/booking" method="post">
+                <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <input type="date" name="date_min" min="2023-05-23" max="2077-12-31">
+                            <input type="date" name="date_max" min="2023-05-23" max="2077-12-31">
+                            <input type="submit" value="Забронировать" class="booking-button">
+                            <button type="button" class="booking-button" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="d-grid gap-2 col-6 mx-auto func-buttons">
+                <!-- Модальное окно -->
+                <form action="/create" method="post">
+                    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <input type="text" name="room_num" placeholder="Кол-во комнат">
+                                <input type="text" name="area" placeholder="Площадь, м²">
+                                <input type="text" name="floor" placeholder="Этаж">
+                                <input type="text" name="city" placeholder="Город">
+                                <input type="text" name="address" placeholder="Адрес">
+                                <input type="text" name="price" placeholder="Цена">
+                                <input type="submit" value="Сохранить изменения">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock container -%}
+{% endblock %}

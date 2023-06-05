@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ super() }}
+{%- block container -%}
+    <table class="container d-flex align-items-center justify-content-center">
+        <tr>
+            <td>ID пользователя:</td>
+            <td>{{ current_user.get_id() }}</td>
+        </tr>
+        <tr>
+            <td><a href="{{ url_for('logout') }}">Выйти из профиля</a></td>
+        </tr>
+    </table>
+{% endblock container -%}
+{% endblock %}

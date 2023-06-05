@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ super() }}
+{%- block container -%}
+<form method="POST" class="container d-flex align-items-center justify-content-center">
+  <table>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="room_num" placeholder="Кол-во комнат"></td>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="area" placeholder="Площадь, м²"></td>
+    </tr>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="floor" placeholder="Этаж"></td>
+    </tr>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="address" placeholder="Адрес"></td>
+    </tr>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="city" placeholder="Город"></td>
+    </tr>
+    <tr>
+      <td><input class="form-control create-input" type="text" name="price" placeholder="Стоимость в рублях за день"></td>
+    </tr>
+    <tr>
+      <td><input class="form-control create-button" type="submit" value="Добавить"></td>
+    </tr>
+  </table>
+</form>
+{% endblock container -%}
+{% endblock %}
